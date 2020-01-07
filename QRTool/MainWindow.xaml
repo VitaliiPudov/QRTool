@@ -1,0 +1,91 @@
+﻿<Window x:Class="QRTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QRTool"
+        xmlns:conv="clr-namespace:QRTool.ViewModel.Converters"
+        mc:Ignorable="d" FontFamily="Verdana"
+        Closing="Window_Closing"     WindowStyle="None"
+        WindowState="Maximized" WindowStartupLocation="CenterScreen" >
+
+    <Window.Resources>
+        <Style x:Key="RoundCorner" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="20" Background="CornflowerBlue" BorderThickness="3" BorderBrush="CadetBlue" Padding="2">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontFamily" Value="Verdana" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Width" Value="220" />
+            <Setter Property="Height" Value="70" />
+        </Style>
+    </Window.Resources>
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="Gray" Offset="0"/>
+            <GradientStop Color="White" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <Window.Foreground>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="Gray" Offset="0"/>
+            <GradientStop Color="White" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Foreground>
+
+    <Border>
+        <Grid>
+            <Grid.Resources>
+                <conv:BoolToVisibleConverter x:Key="boolToVisibleConverter" IsInverted="False" />
+                <conv:BoolToVisibleConverter x:Key="boolToVisibleConverterInv" IsInverted="True" />
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="30" />
+                <RowDefinition />
+                <RowDefinition Height="500" />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="320"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.ColumnSpan="2" FontSize="28" FontWeight="Bold" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" >Beleg-Scanner</TextBlock>
+            <Separator Grid.Row="1" Grid.ColumnSpan="2" BorderThickness="0" Background="Red" Height="18"/>
+            <Label Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Content="{Binding LabelText}"></Label>
+            <Grid Grid.Row="3" >
+                <Border Name="Mask" CornerRadius="20" BorderThickness="5" BorderBrush="White" Background="White"
+                    Width="780" Height="430" Visibility="{Binding IsLandscape, Converter={StaticResource boolToVisibleConverterInv}}">
+                
+            </Border>
+
+                <StackPanel Width="752" Height="423">
+                    <Image Name="frameHolderPort" Stretch="Fill">
+                    </Image>
+                <StackPanel.OpacityMask>
+                    <VisualBrush Visual="{Binding ElementName=Mask}" />
+                </StackPanel.OpacityMask>
+            </StackPanel>
+            </Grid>
+            <StackPanel Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"> <!--Visibility="{Binding IsLandscape, Converter={StaticResource boolToVisibleConverterInv}}">-->
+                <Button Margin="10" Style="{DynamicResource RoundCorner}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding MakePhotoCommand}" Visibility="{Binding IsQRDecoded, Converter={StaticResource boolToVisibleConverter}}">Photo aufnehmen</Button>
+                <Button Margin="10" Style="{DynamicResource RoundCorner}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding SendPhotoCommand}" Visibility="{Binding IsPhotMade, Converter={StaticResource boolToVisibleConverter}}">Foto hochladen</Button>
+                <Button Margin="10" Style="{DynamicResource RoundCorner}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding MakePhotoAgainCommand}" Visibility="{Binding IsPhotMade, Converter={StaticResource boolToVisibleConverter}}">Anderes Foto aufnehmen</Button>
+                <Button Margin="10" Style="{DynamicResource RoundCorner}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding MakeQRAgainCommand}" Visibility="{Binding IsPhotMade, Converter={StaticResource boolToVisibleConverter}}">Neue QR-Code einscannen</Button>
+                <Button Margin="10" Style="{DynamicResource RoundCorner}" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click_Exit">Beenden</Button>
+            </StackPanel>
+            <Label Grid.Row="6" Grid.ColumnSpan="2" Foreground="Red" HorizontalAlignment="Right">Version: 0.1.5-test-2</Label>
+        </Grid>
+    </Border>
+
+
+</Window>
